@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <link rel="stylesheet" href="Mentu-2.css">
+</head>
+
+<body>
+
+
+<section class="hero">
+  <div class="overlay"></div>
+
+  <nav>
+    <h1 class="logo">ROYAL FOOD</h1>
+
+    <button id="cartBtn">🛒 0</button>
+  </nav>
+
+  <div class="hero-content">
+    <h2>Mazali Taomlar</h2>
+    <p>Eng yaxshi ovqatlar va ichimliklar</p>
+    <a href="#menu" class="menu-btn">Menyuni Ko‘rish</a>
+  </div>
+</section>
+
+
+<section class="categories">
+  <button data-cat="all" class="active">Hammasi</button>
+  <button data-cat="burger">🍔 Burger</button>
+  <button data-cat="pizza">🍕 Pizza</button>
+  <button data-cat="drink">🍹 Ichimlik</button>
+</section>
+
+
+<section class="menu" id="menu">
+
+  <div class="card" data-cat="burger">
+    <h3>Cheese Burger</h3>
+    <p>45 000 so'm</p>
+    <button class="add">Qo‘shish</button>
+  </div>
+
+  <div class="card" data-cat="pizza">
+    <h3>Italian Pizza</h3>
+    <p>80 000 so'm</p>
+    <button class="add">Qo‘shish</button>
+  </div>
+
+  <div class="card" data-cat="drink">
+    <h3>Mojito</h3>
+    <p>25 000 so'm</p>
+    <button class="add">Qo‘shish</button>
+  </div>
+
+</section>
+
+<!-- CART -->
+<div class="cart" id="cart">
+  <h2>Buyurtmalar</h2>
+  <div id="cartItems"></div>
+  <button id="sendOrder">Telegramga yuborish</button>
+</div>
+
+<script src="script.js"></script>
+<script>
+  let cart = [];
+
+const cartBtn = document.getElementById("cartBtn");
+const cartBox = document.getElementById("cart");
+const cartItems = document.getElementById("cartItems");
+const sendOrder = document.getElementById("sendOrder");
+
+
+cartBtn.onclick = () => {
+  cartBox.classList.toggle("show");
+};
+
+
+document.querySelectorAll(".add").forEach(btn => {
+  btn.onclick = (e) => {
+    const card = e.target.parentElement;
+    const name = card.querySelector("h3").innerText;
+
+    cart.push(name);
+    updateCart();
+  };
+});
+
+
+function updateCart(){
+  cartBtn.innerText = "🛒 " + cart.length;
+
+  cartItems.innerHTML = "";
+  cart.forEach(item => {
+    cartItems.innerHTML += "<p>" + item + "</p>";
+  });
+}
+
+
+document.querySelectorAll(".categories button").forEach(btn => {
+  btn.onclick = () => {
+
+    document.querySelectorAll(".categories button")
+    .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    let cat = btn.dataset.cat;
+
+    document.querySelectorAll(".card").forEach(card => {
+      if(cat === "all" || card.dataset.cat === cat){
+        card.style.display = "block";
+      }else{
+        card.style.display = "none";
+      }
+    });
+
+  };
+});
+
+
+sendOrder.onclick = () => {
+  let text = "Buyurtma:%0A" + cart.join("%0A");
+
+  window.open("https://t.me/share/url?text=" + text);
+};
+</script>
+</body>
+</html>
