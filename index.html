@@ -1,134 +1,312 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Park PRO MAX</title>
+
+<style>
+
+/* RESET */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#0b0f1a;
+color:white;
+}
+
+/* HEADER */
+.header{
+background:linear-gradient(90deg,#ffcc00,#ff8800);
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:bold;
+color:black;
+}
+
+/* SEARCH */
+.search{
+padding:10px;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+outline:none;
+}
+
+/* INSTAGRAM STYLE GRID */
+.menu{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
+padding:10px;
+}
+
+/* CARD */
+.card{
+background:#151c2b;
+border-radius:15px;
+overflow:hidden;
+transition:.3s;
+position:relative;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px rgba(255,204,0,.4);
+}
+
+/* IMAGE */
+.card img{
+width:100%;
+height:120px;
+object-fit:cover;
+display:none;
+}
+
+/* SKELETON LOADING */
+.skeleton{
+width:100%;
+height:120px;
+background:linear-gradient(90deg,#222,#333,#222);
+animation:load 1.2s infinite;
+}
+
+@keyframes load{
+0%{background-position:-200px 0}
+100%{background-position:200px 0}
+}
+
+/* TEXT */
+.card h3{
+font-size:13px;
+padding:5px;
+}
+
+.price{
+color:#ffcc00;
+font-size:12px;
+padding:0 5px;
+}
+
+.card button{
+width:100%;
+padding:8px;
+background:#ffcc00;
+border:none;
+cursor:pointer;
+}
+
+/* CART */
+.cart{
+position:fixed;
+right:10px;
+top:70px;
+width:300px;
+background:#111827;
+padding:10px;
+border-radius:15px;
+display:none;
+}
+
+.cart.show{display:block;}
+
+.item{
+display:flex;
+justify-content:space-between;
+padding:5px 0;
+}
+
+/* CHECKOUT */
+.checkout{
+background:#00c853;
+border:none;
+padding:10px;
+width:100%;
+border-radius:10px;
+color:white;
+margin-top:10px;
+cursor:pointer;
+}
+
+/* RECEIPT */
+.receipt{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.9);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.box{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+width:300px;
+}
+
+/* BACK BUTTON */
+.back{
+background:red;
+color:white;
+border:none;
+padding:5px 10px;
+border-radius:8px;
+margin-top:10px;
+cursor:pointer;
+}
+
+</style>
 </head>
-<body>
-     <link rel="stylesheet" href="Mentu-2.css">
-</head>
 
 <body>
 
+<div class="header">
+🍔 Family Park PRO MAX
+<button onclick="toggleCart()">🛒 <span id="count">0</span></button>
+</div>
 
-<section class="hero">
-  <div class="overlay"></div>
+<div class="search">
+<input id="search" placeholder="🔍 taom qidirish...">
+</div>
 
-  <nav>
-    <h1 class="logo">ROYAL FOOD</h1>
-
-    <button id="cartBtn">🛒 0</button>
-  </nav>
-
-  <div class="hero-content">
-    <h2>Mazali Taomlar</h2>
-    <p>Eng yaxshi ovqatlar va ichimliklar</p>
-    <a href="#menu" class="menu-btn">Menyuni Ko‘rish</a>
-  </div>
-</section>
-
-
-<section class="categories">
-  <button data-cat="all" class="active">Hammasi</button>
-  <button data-cat="burger">🍔 Burger</button>
-  <button data-cat="pizza">🍕 Pizza</button>
-  <button data-cat="drink">🍹 Ichimlik</button>
-</section>
-
-
-<section class="menu" id="menu">
-
-  <div class="card" data-cat="burger">
-    <h3>Cheese Burger</h3>
-    <p>45 000 so'm</p>
-    <button class="add">Qo‘shish</button>
-  </div>
-
-  <div class="card" data-cat="pizza">
-    <h3>Italian Pizza</h3>
-    <p>80 000 so'm</p>
-    <button class="add">Qo‘shish</button>
-  </div>
-
-  <div class="card" data-cat="drink">
-    <h3>Mojito</h3>
-    <p>25 000 so'm</p>
-    <button class="add">Qo‘shish</button>
-  </div>
-
-</section>
+<div class="menu" id="menu"></div>
 
 <!-- CART -->
 <div class="cart" id="cart">
-  <h2>Buyurtmalar</h2>
-  <div id="cartItems"></div>
-  <button id="sendOrder">Telegramga yuborish</button>
+<h3>Savat</h3>
+<div id="cartItems"></div>
+<button class="checkout" onclick="checkout()">💳 Checkout</button>
 </div>
 
-<script src="script.js"></script>
+<!-- RECEIPT -->
+<div class="receipt" id="receipt">
+<div class="box">
+<h3>🧾 CHEK</h3>
+<div id="bill"></div>
+<button onclick="tg()">📲 Telegram</button>
+<button class="back" onclick="closeReceipt()">⬅ Orqaga</button>
+</div>
+</div>
+
 <script>
-  let cart = [];
 
-const cartBtn = document.getElementById("cartBtn");
-const cartBox = document.getElementById("cart");
-const cartItems = document.getElementById("cartItems");
-const sendOrder = document.getElementById("sendOrder");
+let foods = [
+{name:"Burger",price:45000,img:"https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg"},
+{name:"Pizza",price:80000,img:"https://images.pexels.com/photos/2619967/pexels-photo-2619967.jpeg"},
+{name:"Mojito",price:25000,img:"https://images.pexels.com/photos/1600727/pexels-photo-1600727.jpeg"},
+{name:"Cake",price:35000,img:"https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg"},
+{name:"Fries",price:15000,img:"https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg"},
+{name:"Yapon lag'mon",price:30000,img:"https://images.pexels.com/photos/1907227/pexels-photo-1907227.jpeg"}
+];
 
+let cart = [];
 
-cartBtn.onclick = () => {
-  cartBox.classList.toggle("show");
-};
+function show(list){
 
+let box=document.getElementById("menu");
+box.innerHTML="";
 
-document.querySelectorAll(".add").forEach(btn => {
-  btn.onclick = (e) => {
-    const card = e.target.parentElement;
-    const name = card.querySelector("h3").innerText;
+list.forEach(f=>{
 
-    cart.push(name);
-    updateCart();
-  };
+box.innerHTML+=`
+<div class="card">
+
+<div class="skeleton"></div>
+
+<img src="${f.img}" onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+
+<h3>${f.name}</h3>
+<p class="price">${f.price} so'm</p>
+<button onclick="add('${f.name}',${f.price})">Qo'shish</button>
+
+</div>`;
 });
 
-
-function updateCart(){
-  cartBtn.innerText = "🛒 " + cart.length;
-
-  cartItems.innerHTML = "";
-  cart.forEach(item => {
-    cartItems.innerHTML += "<p>" + item + "</p>";
-  });
 }
 
+show(foods);
 
-document.querySelectorAll(".categories button").forEach(btn => {
-  btn.onclick = () => {
+/* SEARCH */
+document.getElementById("search").oninput=(e)=>{
+let val=e.target.value.toLowerCase();
+let f=foods.filter(i=>i.name.toLowerCase().includes(val));
+show(f);
+};
 
-    document.querySelectorAll(".categories button")
-    .forEach(b => b.classList.remove("active"));
+function add(name,price){
+cart.push({name,price});
+document.getElementById("count").innerText=cart.length;
+update();
+}
 
-    btn.classList.add("active");
+function toggleCart(){
+document.getElementById("cart").classList.toggle("show");
+}
 
-    let cat = btn.dataset.cat;
+function update(){
+let box=document.getElementById("cartItems");
+box.innerHTML="";
+cart.forEach(i=>{
+box.innerHTML+=`
+<div class="item">
+<span>${i.name}</span>
+<span>${i.price}</span>
+</div>`;
+});
+}
 
-    document.querySelectorAll(".card").forEach(card => {
-      if(cat === "all" || card.dataset.cat === cat){
-        card.style.display = "block";
-      }else{
-        card.style.display = "none";
-      }
-    });
+/* CHECKOUT */
+function checkout(){
 
-  };
+let bill="";
+let total=0;
+
+cart.forEach(i=>{
+bill+=i.name+" - "+i.price+"<br>";
+total+=i.price;
 });
 
+bill+="<br><b>Total: "+total+"</b>";
 
-sendOrder.onclick = () => {
-  let text = "Buyurtma:%0A" + cart.join("%0A");
+document.getElementById("bill").innerHTML=bill;
+document.getElementById("receipt").style.display="flex";
+}
 
-  window.open("https://t.me/share/url?text=" + text);
-};
+/* CLOSE RECEIPT */
+function closeReceipt(){
+document.getElementById("receipt").style.display="none";
+}
+
+/* TELEGRAM */
+function tg(){
+
+let text="🍔 BUYURTMA:%0A";
+let total=0;
+
+cart.forEach(i=>{
+text+=i.name+" - "+i.price+"%0A";
+total+=i.price;
+});
+
+text+="%0A💰 Total: "+total;
+
+window.open("https://t.me/share/url?text="+text);
+}
+
 </script>
+
 </body>
 </html>
